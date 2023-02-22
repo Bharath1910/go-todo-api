@@ -8,8 +8,8 @@ import (
 
 func InitiateRouter() {
 	r := mux.NewRouter()
-	r.HandleFunc()
-	r.HandleFunc()
+	r.HandleFunc("/todos", getAllTodos).Methods("GET")
+	r.HandleFunc("/todo/{username}", getTodo).Methods("GET")
 
 	http.ListenAndServe(":8000", r)
 }
