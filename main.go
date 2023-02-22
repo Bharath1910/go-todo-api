@@ -70,6 +70,26 @@ func getAllTodos(res http.ResponseWriter, req *http.Request) {
 }
 
 func getTodo(res http.ResponseWriter, req *http.Request) {
+	param := mux.Vars(req)
+	fmt.Println(param)
+
+	filter := bson.D{{"username", param["username"]}}
+	result := Users{}
+
+	collection := collection("Todo", "users")
+	err := collection.FindOne(context.Background(), filter).Decode(&result)
+
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		errJson, _ := json.Marshal(map[string]string{
+			"Error": "User does not exists!",
+		})
+		res.Write(errJson)
+	} else {
+		res.WriteHeader(http.StatusOK)
+		todoJson, _ := json.Marshal(result)
+		res.Write(todoJson)
+	}
 
 }
 
